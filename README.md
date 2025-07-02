@@ -30,7 +30,6 @@ QuickCare is built using a Spring Boot microservices architecture that includes:
 -  **Authentication & Role Management (JWT)**
 -  **Eureka for service discovery**
 -  **API Gateway for request routing**
--  **Central Config Server for shared properties**
 -  **Separate services for Patients, Doctors, Appointments, and Notifications**
 -  **Feign for inter-service communication**
 -  **MySQL as the relational data store**
