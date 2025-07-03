@@ -4,6 +4,7 @@ import com.quickcare.appointment_service.clients.DoctorClient;
 import com.quickcare.appointment_service.clients.NotificationClient;
 import com.quickcare.appointment_service.clients.PatientClient;
 import com.quickcare.appointment_service.dto.Doctor;
+import com.quickcare.appointment_service.dto.NotificationRequestDto;
 import com.quickcare.appointment_service.entity.Appointment;
 import com.quickcare.appointment_service.repositories.AppointmentRepository;
 import com.quickcare.appointment_service.service.AppointmentService;
@@ -63,15 +64,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointment.setAppointmentStatus("SCHEDULED");
 
-        // Notification parameters
-        String patientEmail = appointment.getPatientEmail();
-        String patientName = appointment.getPatientName();
-        String doctorEmail = appointment.getDoctorEmail();
-        String doctorName = appointment.getDoctorName();
-        String appointmentDateTime = appointment.getAppointmentDateTime().toString();
+        NotificationRequestDto notification = new NotificationRequestDto();
+        notification.setPatientEmail(appointment.getPatientEmail());      // Ensure this data is present
+        notification.setPatientName(appointment.getPatientName());
+        notification.setDoctorEmail(appointment.getDoctorEmail());                   // From DoctorClient
+        notification.setDoctorName(appointment.getDoctorName());
+        notification.setAppointmentDateTime(appointment.getAppointmentDateTime().toString());
 
-        // Send one call to notification service with full data
-        notificationClient.notifyAppointment(patientEmail, patientName, doctorEmail, doctorName, appointmentDateTime);
+        notificationClient.notifyAppointment(notification);
+
 
         return appointmentRepository.save(appointment);
     }
@@ -131,14 +132,16 @@ else {
         // Update status to CANCELLED
         appointmentRepository.save(appointment);
 
-        // Send cancellation notification to patient
-        String patientEmail = appointment.getPatientEmail();
-        String patientName = appointment.getPatientName();
-        String doctorName = appointment.getDoctorName();
-        String doctorEmail= appointment.getDoctorEmail();
-        String appointmentDateTime = appointment.getAppointmentDateTime().toString();
 
-        notificationClient.notifyAppointmentcancel(patientEmail, patientName, doctorEmail, doctorName, appointmentDateTime);
+        NotificationRequestDto notification = new NotificationRequestDto();
+        notification.setPatientEmail(appointment.getPatientEmail());      
+        notification.setPatientName(appointment.getPatientName());
+        notification.setDoctorEmail(appointment.getDoctorEmail());                  
+        notification.setDoctorName(appointment.getDoctorName());
+        notification.setAppointmentDateTime(appointment.getAppointmentDateTime().toString());
+
+
+        notificationClient.notifyAppointmentcancel(notification);
     }
 
 }
