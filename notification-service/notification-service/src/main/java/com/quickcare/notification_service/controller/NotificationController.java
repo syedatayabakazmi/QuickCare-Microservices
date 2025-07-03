@@ -1,5 +1,6 @@
 package com.quickcare.notification_service.controller;
 
+import com.quickcare.notification_service.dto.NotificationRequestDto;
 import com.quickcare.notification_service.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +14,10 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @PostMapping("/appointment")
-    public ResponseEntity<String> notifyAppointment(
-            @RequestParam String patientEmail,
-            @RequestParam String patientName,
-            @RequestParam String doctorEmail,
-            @RequestParam String doctorName,
-            @RequestParam String appointmentDateTime) {
+    public ResponseEntity<String> notifyAppointment(@RequestBody NotificationRequestDto notificationRequestDto) {
 
         notificationService.notifyAppointmentBooking(
-                patientEmail, patientName, doctorEmail, doctorName, appointmentDateTime
+              notificationRequestDto
         );
 
         return ResponseEntity.ok("Notification emails sent to patient and doctor.");
@@ -29,16 +25,9 @@ public class NotificationController {
 
 
     @PutMapping("/appointmentcancel")
-    public ResponseEntity<String> notifyAppointmentCancel(
-            @RequestParam String patientEmail,
-            @RequestParam String patientName,
-            @RequestParam String doctorEmail,
-            @RequestParam String doctorName,
-            @RequestParam String appointmentDateTime) {
+    public ResponseEntity<String> notifyAppointmentCancel(@RequestBody NotificationRequestDto notificationRequestDto) {
 
-        notificationService.notifyAppointmentCancellation(
-                patientEmail, patientName, doctorEmail, doctorName, appointmentDateTime
-        );
+        notificationService.notifyAppointmentCancellation(notificationRequestDto);
 
         return ResponseEntity.ok("Notification emails sent to patient and doctor.");
     }
